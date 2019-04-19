@@ -1,0 +1,110 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "UCSF ChimeraX version: 0.8"
+  },
+  "scenes": [
+    {
+      "nodes": [
+        2
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "1crn.pdb /A THR 1 ribbons",
+      "mesh": 0
+    },
+    {
+      "name": "ribbon",
+      "children": [
+        0
+      ]
+    },
+    {
+      "name": "1crn.pdb",
+      "children": [
+        1
+      ]
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "COLOR_0": 2
+          },
+          "indices": 3
+        }
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "count": 11308,
+      "type": "VEC3",
+      "componentType": 5126,
+      "bufferView": 0,
+      "min": [
+        0.1357811838388443,
+        1.2493449449539185,
+        -6.5755534172058105
+      ],
+      "max": [
+        22.5145320892334,
+        19.06268882751465,
+        19.561668395996094
+      ]
+    },
+    {
+      "count": 11308,
+      "type": "VEC3",
+      "componentType": 5126,
+      "bufferView": 1
+    },
+    {
+      "count": 11308,
+      "type": "VEC4",
+      "componentType": 5121,
+      "bufferView": 2,
+      "normalized": true
+    },
+    {
+      "count": 63336,
+      "type": "SCALAR",
+      "componentType": 5125,
+      "bufferView": 3
+    }
+  ],
+  "bufferViews": [
+    {
+      "byteLength": 135696,
+      "byteOffset": 0,
+      "buffer": 0
+    },
+    {
+      "byteLength": 135696,
+      "byteOffset": 135696,
+      "buffer": 0
+    },
+    {
+      "byteLength": 45232,
+      "byteOffset": 271392,
+      "buffer": 0
+    },
+    {
+      "byteLength": 253344,
+      "byteOffset": 316624,
+      "buffer": 0
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "1crn_3_data.bin",
+      "byteLength": 569968
+    }
+  ]
+}

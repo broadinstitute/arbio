@@ -1,0 +1,213 @@
+{
+  animations: [
+    {
+      path: 'sampledata/models/scarlet_maccaw_witmer_lab/5ebaec95694b4b9faecacecf06d7b5f4.fbx.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'joint_2:Parrot_raw_geometry:phong2',
+      parameters: [
+        {
+          baseColor: [
+            0.92200000000000004,
+            0.86799999999999999,
+            0.70299999999999996,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+    {
+      name: 'joint_2:Parrot_raw_geometry:pasted__lambert5',
+      parameters: [
+        {
+          baseColor: [
+            0.92200000000000004,
+            0.86789099999999997,
+            0.70256399999999997,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+    {
+      name: 'joint_2:Parrot_raw_geometry:phong1',
+      parameters: [
+        {
+          baseColor: [
+            0.23400000000000001,
+            0.153001,
+            0,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+    {
+      name: 'joint_2:Parrot_raw_geometry:pasted__phong1',
+      parameters: [
+        {
+          baseColor: [
+            0.23400000000000001,
+            0.153,
+            0,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+    {
+      name: 'joint_2:Parrot_raw_geometry:pasted__phong3',
+      parameters: [
+        {
+          baseColor: [
+            0.92200000000000004,
+            0.86799999999999999,
+            0.70299999999999996,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampledata/models/scarlet_maccaw_witmer_lab/5ebaec95694b4b9faecacecf06d7b5f4.fbx.fbx',
+    name: '5ebaec95694b4b9faecacecf06d7b5f4.fbx',
+    recenter: 'root',
+    scale: 0.175487,
+  },
+  version: '0.54:1',
+}
