@@ -1,4 +1,4 @@
-# broad-ar
+# arbio
 
 # Adding and placing 3D models
 1. Set up your development environment following  https://developers.google.com/ar/develop/java/quickstart.
