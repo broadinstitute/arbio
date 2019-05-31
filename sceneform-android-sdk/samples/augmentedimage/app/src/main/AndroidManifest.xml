@@ -23,6 +23,9 @@
        only being visible in the Google Play Store on devices that support ARCore. -->
   <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
 
+  <!-- eweitz: Needed to load 3D models (e.g. a glTF) from the internet. -->
+  <uses-permission android:name="android.permission.INTERNET"/>
+
   <application
       android:allowBackup="false"
       android:icon="@drawable/ic_launcher"
