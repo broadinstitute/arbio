@@ -25,6 +25,7 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
+import com.google.ar.sceneform.assets.RenderableSource;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -50,13 +51,23 @@ public class AugmentedImageNode extends AnchorNode {
   private static CompletableFuture<ModelRenderable> maccawAnimation;
   private static CompletableFuture<ViewRenderable> ratGenome;
 
+  private static final String GLTF_ASSET =
+          "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf";
+
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
     if (whiteBloodCell == null) {
       whiteBloodCell =
               ModelRenderable.builder()
-                      .setSource(context, Uri.parse("1408 White Blood Cell.sfb"))
+//                      .setSource(context, Uri.parse("1408 White Blood Cell.sfb"))
+                      .setSource(context, RenderableSource.builder().setSource(
+                              context,
+//                  Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.fullpath.gltf"),
+                              Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf"),
+                              RenderableSource.SourceType.GLTF2).build())
+//                .setRegistryId(Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.fullpath.gltf"))
+                      .setRegistryId(Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf"))
                       .build();
     }
 
@@ -292,7 +303,7 @@ public class AugmentedImageNode extends AnchorNode {
   }
 
 
-    public AugmentedImage getImage() {
+  public AugmentedImage getImage() {
     return image;
   }
 }
