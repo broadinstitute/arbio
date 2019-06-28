@@ -18,6 +18,7 @@ package com.google.ar.sceneform.samples.augmentedimage;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.util.Log;
 import com.google.ar.core.AugmentedImage;
 import com.google.ar.sceneform.AnchorNode;
@@ -26,7 +27,17 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -54,8 +65,54 @@ public class AugmentedImageNode extends AnchorNode {
   private static final String GLTF_ASSET =
           "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf";
 
+  private static String readUrl(String urlString) throws Exception {
+    BufferedReader reader = null;
+    try {
+      URL url = new URL(urlString);
+      reader = new BufferedReader(new InputStreamReader(url.openStream()));
+      StringBuffer buffer = new StringBuffer();
+      int read;
+      char[] chars = new char[1024];
+      while ((read = reader.read(chars)) != -1)
+        buffer.append(chars, 0, read);
+
+      return buffer.toString();
+    } finally {
+      if (reader != null)
+        reader.close();
+    }
+  }
+
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
+
+
+    // TODO: Refactor to not fetch in main thread.
+    if (android.os.Build.VERSION.SDK_INT > 9) {
+      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+      StrictMode.setThreadPolicy(policy);
+    }
+
+    String content = "";
+    try {
+      content = this.readUrl("https://storage.googleapis.com/arbio/ar-assets-config.json");
+      Log.i(TAG, "Fetched AR assets configuration");
+    } catch (Exception e) {
+      Log.e(TAG, "Cannot fetch AR assets configuration", e);
+    }
+
+    JsonObject assets = new JsonParser().parse(content).getAsJsonObject();
+    Log.i(TAG, "Parsed AR assets JSON:");
+    Log.i(TAG, assets.toString());
+
+    JsonArray assetsArray = (JsonArray) assets.get("assets");
+
+    for (int i = 0; i < assetsArray.size(); i++) {
+      JsonElement asset = assetsArray.get(i);
+
+      Log.i(TAG, "Asset:");
+      Log.i(TAG, assetsArray.get(i).toString());
+    }
 
     if (whiteBloodCell == null) {
       whiteBloodCell =
