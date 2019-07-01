@@ -27,17 +27,24 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -65,6 +72,8 @@ public class AugmentedImageNode extends AnchorNode {
   private static final String GLTF_ASSET =
           "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf";
 
+  private static Map<String, Object> assets;
+
   private static String readUrl(String urlString) throws Exception {
     BufferedReader reader = null;
     try {
@@ -83,6 +92,27 @@ public class AugmentedImageNode extends AnchorNode {
     }
   }
 
+  private static void setAssets() {
+    String content = "";
+    try {
+      content = readUrl("https://storage.googleapis.com/arbio/ar-assets-config.json");
+      Log.i(TAG, "Fetched AR assets configuration");
+    } catch (Exception e) {
+      Log.e(TAG, "Cannot fetch AR assets configuration", e);
+    }
+
+    Type type = new TypeToken<Map<String, Object>>(){}.getType();
+    Map<String, Object> jsonContent = new Gson().fromJson(content, type);
+    Log.i(TAG, "Parsed AR assets JSON:");
+    Log.i(TAG, jsonContent.toString());
+
+    Log.i(TAG, "Assets in JSON");
+    Log.i(TAG, jsonContent.get("assets").toString());
+
+    assets = (Map<String, Object>) jsonContent.get("assets");
+
+  }
+
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
@@ -93,25 +123,34 @@ public class AugmentedImageNode extends AnchorNode {
       StrictMode.setThreadPolicy(policy);
     }
 
-    String content = "";
-    try {
-      content = this.readUrl("https://storage.googleapis.com/arbio/ar-assets-config.json");
-      Log.i(TAG, "Fetched AR assets configuration");
-    } catch (Exception e) {
-      Log.e(TAG, "Cannot fetch AR assets configuration", e);
-    }
+    setAssets();
 
-    JsonObject assets = new JsonParser().parse(content).getAsJsonObject();
-    Log.i(TAG, "Parsed AR assets JSON:");
-    Log.i(TAG, assets.toString());
+    for(Map.Entry<String, Object> entry : assets.entrySet()){
 
-    JsonArray assetsArray = (JsonArray) assets.get("assets");
+      Log.i(TAG, "entry:");
+      Log.i(TAG, entry.toString());
 
-    for (int i = 0; i < assetsArray.size(); i++) {
-      JsonElement asset = assetsArray.get(i);
+      Map<String, Object> asset = (Map<String, Object>) entry.getValue();
 
-      Log.i(TAG, "Asset:");
-      Log.i(TAG, assetsArray.get(i).toString());
+      Log.i(TAG, "asset:");
+      Log.i(TAG, asset.toString());
+
+      Uri uri = Uri.parse(asset.get("url").toString());
+      ArrayList position = (ArrayList) asset.get("position");
+
+      CompletableFuture<ModelRenderable> model = ModelRenderable.builder()
+              .setSource(context, RenderableSource.builder().setSource(
+                      context,
+                      uri,
+                      RenderableSource.SourceType.GLTF2).build())
+              .setRegistryId(uri)
+              .build();
+
+      asset.put("url", uri);
+      asset.put("position", position);
+      asset.put("model", model);
+
+      assets.put(entry.getKey(), asset);
     }
 
     if (whiteBloodCell == null) {
@@ -187,13 +226,21 @@ public class AugmentedImageNode extends AnchorNode {
 
     Vector3 localPosition = new Vector3();
     Node node;
+    
+    Map<String, Object> asset = (Map<String, Object>) assets.get("b_lymphocyte");
+    ArrayList position = (ArrayList) asset.get("position");
+    Float x = ((Double) position.get(0)).floatValue();
+    Float y = ((Double) position.get(1)).floatValue();
+    Float z = ((Double) position.get(2)).floatValue();
+
+    CompletableFuture<ModelRenderable> model = (CompletableFuture<ModelRenderable>) asset.get("model");
 
     // Top of mezzanine stairs
-    localPosition.set(-22f, 3f, 5f); // Tuned for west stand
+    localPosition.set(x, y, z); // Tuned for west stand
     node = new Node();
     node.setParent(this);
     node.setLocalPosition(localPosition);
-    node.setRenderable(whiteBloodCell.getNow(null));
+    node.setRenderable(model.getNow(null));
 
     // "Stories retold" inset
     localPosition.set(-11f, 0f, 6.5f); // Tuned for west stand
