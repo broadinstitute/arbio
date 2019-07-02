@@ -1,10 +1,20 @@
 # arbio
+Augmented reality for biology, using Google ARCore
 
-# Adding and placing 3D models
-1. Set up your development environment following  https://developers.google.com/ar/develop/java/quickstart.
-2. Print a paper copy of https://github.com/broadinstitute/arbio/blob/master/b_lymphocyte.png
-3. Open this project in your IDE, as set up in Step 1.
-4. Add your 3D model file (e.g. .gltf, .obj/.mtl) to `sceneform-android-sdk/samples/augmentedimage/app/sampledata/models`.
-5. In IDE, right-click on model file and click "Import Sceneform Asset".
-6. In IDE, edit `setBroadLobbyImages` in com/google/ar/sceneform/samples/augmentedimage/AugmentedImageNode.java to add your models of interest using coordinates of existing models as reference.
-7. Connect to your Android device (e.g. Pixel phone) via USB, click "Run" in IDE, "Run...", "Edit Configuration...", configure Run settings to use your device, then click "Run".
+# Install
+Go to https://storage.googleapis.com/arbio/arbio.apk from a web browser on a supported Android device (e.g. Pixel 2 phone).  This will install the "Broad AR" app.
+
+# Get started
+* Print a paper copy of this cell image: https://github.com/broadinstitute/arbio/blob/master/b_lymphocyte.png.  
+* Start the Broad AR app.
+* When you see the "Fit the image you're scanning" message, point your phone's camera at your printed cell image.
+* When the message disappears, raise your phone and see the 3D models placed around your physical environment.
+
+# Configure new 3D models
+* Contact Eric Weitz (eweitz@broadinstitute.org) for write access to https://console.cloud.google.com/storage/browser/arbio.
+* Download https://storage.googleapis.com/arbio/ar-assets-config.json
+* Edit `ar-assets-config.json` with the name of your GLTF 3D model, e.g. `protein.gltf`.
+* Upload your edited copy of `ar-assets-config.json` to https://console.cloud.google.com/storage/browser/arbio via the "Upload files" button.  
+* Upload your GLTF model (e.g. `protein.gltf`, `protein.bin`, `protein.png`) to https://console.cloud.google.com/storage/browser/arbio via the "Upload files" or "Upload folder" buttons.
+* Restart the Broad AR app, fit the printed cell image.
+* See your new 3D models.
