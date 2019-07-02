@@ -15,6 +15,6 @@ Go to https://storage.googleapis.com/arbio/arbio.apk from a web browser on a sup
 * Download https://storage.googleapis.com/arbio/ar-assets-config.json
 * Edit `ar-assets-config.json` with the name of your GLTF 3D model, e.g. `protein.gltf`.
 * Upload your edited copy of `ar-assets-config.json` to https://console.cloud.google.com/storage/browser/arbio via the "Upload files" button.  
-* Upload your GLTF model (e.g. `protein.gltf`, `protein.bin`, `protein.png`) to https://console.cloud.google.com/storage/browser/arbio via the "Upload files" or "Upload folder" buttons.
+* Upload your all files for your 3D model (e.g. `protein.gltf`, `protein.bin`, `protein.png`) to https://console.cloud.google.com/storage/browser/arbio via the "Upload files" or "Upload folder" buttons.
 * Restart the Broad AR app, fit the printed cell image.
 * See your new 3D models.
