@@ -3,6 +3,10 @@
     "b_lymphocyte": {
       "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
       "position": [-22.0, 3.0, 5.0]
+    },
+    "brain": {
+      "url": "https://storage.googleapis.com/arbio/brain_areas/scene.gltf",
+      "position": [-11.0, 0.0, 6.5]
     }
   }
 }

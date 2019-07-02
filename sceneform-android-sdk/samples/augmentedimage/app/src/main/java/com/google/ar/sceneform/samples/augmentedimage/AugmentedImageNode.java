@@ -153,20 +153,6 @@ public class AugmentedImageNode extends AnchorNode {
       assets.put(entry.getKey(), asset);
     }
 
-    if (whiteBloodCell == null) {
-      whiteBloodCell =
-              ModelRenderable.builder()
-//                      .setSource(context, Uri.parse("1408 White Blood Cell.sfb"))
-                      .setSource(context, RenderableSource.builder().setSource(
-                              context,
-//                  Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.fullpath.gltf"),
-                              Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf"),
-                              RenderableSource.SourceType.GLTF2).build())
-//                .setRegistryId(Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.fullpath.gltf"))
-                      .setRegistryId(Uri.parse("https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf"))
-                      .build();
-    }
-
     if (protein == null) {
       protein =
               ModelRenderable.builder()
@@ -210,51 +196,55 @@ public class AugmentedImageNode extends AnchorNode {
   public void setBroadLobbyImages(AugmentedImage image) {
     this.image = image;
 
-    // If any of the models are not loaded, then recurse when all are loaded.
-    if (!whiteBloodCell.isDone()) {
-      CompletableFuture.allOf(whiteBloodCell)
-              .thenAccept((Void aVoid) -> setBroadLobbyImages(image))
-              .exceptionally(
-                      throwable -> {
-                        Log.e(TAG, "Exception loading", throwable);
-                        return null;
-                      });
+    for(Map.Entry<String, Object> entry : assets.entrySet()) {
+      Map<String, Object> asset = (Map<String, Object>) assets.get(entry.getKey());
+
+      CompletableFuture<ModelRenderable> model = (CompletableFuture<ModelRenderable>) asset.get("model");
+
+      // If any of the models are not loaded, then recurse when all are loaded.
+      if (!model.isDone()) {
+        CompletableFuture.allOf(model)
+                .thenAccept((Void aVoid) -> setBroadLobbyImages(image))
+                .exceptionally(
+                        throwable -> {
+                          Log.e(TAG, "Exception loading", throwable);
+                          return null;
+                        });
+      }
+
+      // Set the anchor based on the center of the image.
+      setAnchor(image.createAnchor(image.getCenterPose()));
+
+      Vector3 localPosition = new Vector3();
+      Node node;
+
+      ArrayList position = (ArrayList) asset.get("position");
+      Float x = ((Double) position.get(0)).floatValue();
+      Float y = ((Double) position.get(1)).floatValue();
+      Float z = ((Double) position.get(2)).floatValue();
+
+
+      // Top of mezzanine stairs
+      localPosition.set(x, y, z); // Tuned for west stand
+      node = new Node();
+      node.setParent(this);
+      node.setLocalPosition(localPosition);
+      node.setRenderable(model.getNow(null));
     }
-
-    // Set the anchor based on the center of the image.
-    setAnchor(image.createAnchor(image.getCenterPose()));
-
-    Vector3 localPosition = new Vector3();
-    Node node;
-    
-    Map<String, Object> asset = (Map<String, Object>) assets.get("b_lymphocyte");
-    ArrayList position = (ArrayList) asset.get("position");
-    Float x = ((Double) position.get(0)).floatValue();
-    Float y = ((Double) position.get(1)).floatValue();
-    Float z = ((Double) position.get(2)).floatValue();
-
-    CompletableFuture<ModelRenderable> model = (CompletableFuture<ModelRenderable>) asset.get("model");
-
-    // Top of mezzanine stairs
-    localPosition.set(x, y, z); // Tuned for west stand
-    node = new Node();
-    node.setParent(this);
-    node.setLocalPosition(localPosition);
-    node.setRenderable(model.getNow(null));
-
-    // "Stories retold" inset
-    localPosition.set(-11f, 0f, 6.5f); // Tuned for west stand
-    node = new Node();
-    node.setParent(this);
-    node.setLocalPosition(localPosition);
-    node.setRenderable(brain.getNow(null));
-
-    // Hybridization oven
-    localPosition.set(-11.5f, 0f, -5f); // Tuned for west stand
-    node = new Node();
-    node.setParent(this);
-    node.setLocalPosition(localPosition);
-    node.setRenderable(maccawAnimation.getNow(null));
+//
+//    // "Stories retold" inset
+//    localPosition.set(-11f, 0f, 6.5f); // Tuned for west stand
+//    node = new Node();
+//    node.setParent(this);
+//    node.setLocalPosition(localPosition);
+//    node.setRenderable(brain.getNow(null));
+//
+//    // Hybridization oven
+//    localPosition.set(-11.5f, 0f, -5f); // Tuned for west stand
+//    node = new Node();
+//    node.setParent(this);
+//    node.setLocalPosition(localPosition);
+//    node.setRenderable(maccawAnimation.getNow(null));
 
   }
 
