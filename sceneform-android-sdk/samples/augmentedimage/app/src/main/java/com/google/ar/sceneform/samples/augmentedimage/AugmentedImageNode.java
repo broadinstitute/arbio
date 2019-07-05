@@ -20,10 +20,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.google.ar.core.AugmentedImage;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.assets.RenderableSource;
@@ -66,11 +71,21 @@ public class AugmentedImageNode extends AnchorNode {
   private static CompletableFuture<ModelRenderable> protein;
   private static CompletableFuture<ModelRenderable> brain;
   private static CompletableFuture<ModelRenderable> cesiumMan;
+//  private static CompletableFuture<ModelRenderable> maccawAnimationFuture;
   private static CompletableFuture<ModelRenderable> maccawAnimation;
+//  private static ModelRenderable maccawAnimation;
   private static CompletableFuture<ViewRenderable> ratGenome;
 
   private static final String GLTF_ASSET =
           "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf";
+
+  // Controls animation playback.
+  private static ModelAnimator animator;
+
+  private static Boolean startedAnimator = false;
+
+  // Index of the current animation playing.
+  private int nextAnimation;
 
   private static Map<String, Object> assets;
 
@@ -153,20 +168,6 @@ public class AugmentedImageNode extends AnchorNode {
       assets.put(entry.getKey(), asset);
     }
 
-    if (protein == null) {
-      protein =
-              ModelRenderable.builder()
-                      .setSource(context, Uri.parse("1408 White Blood Cell.sfb"))
-                      .build();
-    }
-
-    if (brain == null) {
-      brain =
-              ModelRenderable.builder()
-                      .setSource(context, Uri.parse("brain_areas/scene.sfb"))
-                      .build();
-    }
-
     if (cesiumMan == null) {
       cesiumMan =
               ModelRenderable.builder()
@@ -175,10 +176,27 @@ public class AugmentedImageNode extends AnchorNode {
     }
 
     if (maccawAnimation == null) {
-      maccawAnimation =
-              ModelRenderable.builder()
-                      .setSource(context, Uri.parse("5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfb"))
-                      .build();
+
+        Log.i(TAG, "Building maccawAnimation");
+
+        maccawAnimation =
+                ModelRenderable.builder()
+//                        .setSource(context, Uri.parse("5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfb"))
+                        .setSource(context, Uri.parse("andy_dance.sfb"))
+                        .build();
+
+//      ModelRenderable.builder()
+//              .setSource(context, Uri.parse("andy_dance.sfb"))
+//              .build()
+//              .thenAccept(renderable -> {
+//                  maccawAnimation = renderable;
+//                  Log.i(TAG, "Set maccawAnimation = renderable;");
+//              })
+//              .exceptionally(
+//                      throwable -> {
+//                        Log.e(TAG, "Unable to load Renderable.", throwable);
+//                        return null;
+//                      });
     }
 
     if (ratGenome == null) {
@@ -340,15 +358,22 @@ public class AugmentedImageNode extends AnchorNode {
   public void setMaccawAnimationImage(AugmentedImage image) {
     this.image = image;
 
-    // If any of the models are not loaded, then recurse when all are loaded.
+
+    Log.i(TAG, "in setMaccawAnimationImage");
+
     if (!maccawAnimation.isDone()) {
+      Log.i(TAG, "maccawAnimation is not done, waiting");
       CompletableFuture.allOf(maccawAnimation)
-              .thenAccept((Void aVoid) -> setMaccawAnimationImage(image))
+              .thenAccept((Void aVoid) -> {
+                Log.i(TAG, "maccawAnimation is done");
+                setMaccawAnimationImage(image);
+              })
               .exceptionally(
                       throwable -> {
-                        Log.e(TAG, "Exception loading", throwable);
-                        return null;
+                          Log.e(TAG, "Exception loading", throwable);
+                          return null;
                       });
+      return;
     }
 
     // Set the anchor based on the center of the image.
@@ -358,12 +383,34 @@ public class AugmentedImageNode extends AnchorNode {
     Vector3 localPosition = new Vector3();
     Node node;
 
-    // Upper left corner.
-    localPosition.set(-0.5f * image.getExtentX(), 0.0f, -0.5f * image.getExtentZ());
+    ModelRenderable maccaw = maccawAnimation.getNow(null);
+
+    Log.i(TAG, "Got maccaw:");
+    Log.i(TAG, maccaw.toString());
+
     node = new Node();
     node.setParent(this);
     node.setLocalPosition(localPosition);
-    node.setRenderable(maccawAnimation.getNow(null));
+    node.setRenderable(maccaw);
+
+    Log.i(TAG, "startedAnimator:");
+    Log.i(TAG, startedAnimator.toString());
+
+    if ((animator == null || !animator.isRunning()) && startedAnimator == false) {
+      startedAnimator = true;
+      Log.i(TAG, "animator == null");
+      AnimationData data = maccaw.getAnimationData(nextAnimation);
+      nextAnimation = (nextAnimation + 1) % maccaw.getAnimationDataCount();
+      animator = new ModelAnimator(data, maccaw);
+      animator.start();
+//      Toast toast = Toast.makeText(this, data.getName(), Toast.LENGTH_SHORT);
+//      Log.d(
+//              TAG,
+//              String.format(
+//                      "Starting animation %s - %d ms long", data.getName(), data.getDurationMs()));
+//      toast.setGravity(Gravity.CENTER, 0, 0);
+//      toast.show();
+    }
   }
 
   @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})

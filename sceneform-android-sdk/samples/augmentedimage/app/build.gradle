@@ -51,9 +51,10 @@ dependencies {
     //api project(":sceneformux")
 
     // eweitz: Enables runtime asset loading, e.g. to load a 3D model from the internet
-    implementation "com.google.ar.sceneform:core:1.8.0"
-    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.8.0"
-    implementation "com.google.ar.sceneform:assets:1.8.0"
+    implementation "com.google.ar.sceneform:core:1.10.0"
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.10.0"
+    implementation "com.google.ar.sceneform:assets:1.10.0"
+    implementation "com.google.ar.sceneform:animation:1.10.0"
 
     implementation 'com.google.code.gson:gson:2.8.5'
 }
@@ -85,3 +86,8 @@ sceneform.asset('sampledata/models/scarlet_maccaw_witmer_lab/5ebaec95694b4b9faec
         'default',
         'sampledata/models/scarlet_maccaw_witmer_lab/5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfa',
         'src/main/assets/5ebaec95694b4b9faecacecf06d7b5f4.fbx')
+
+sceneform.asset('sampledata/models/andy_dance.fbx',
+        'default',
+        'sampledata/models/andy_dance.sfa',
+        'src/main/assets/andy_dance')
