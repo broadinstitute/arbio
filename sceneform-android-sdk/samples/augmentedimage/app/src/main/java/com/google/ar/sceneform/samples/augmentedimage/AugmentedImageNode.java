@@ -185,18 +185,6 @@ public class AugmentedImageNode extends AnchorNode {
                         .setSource(context, Uri.parse("andy_dance.sfb"))
                         .build();
 
-//      ModelRenderable.builder()
-//              .setSource(context, Uri.parse("andy_dance.sfb"))
-//              .build()
-//              .thenAccept(renderable -> {
-//                  maccawAnimation = renderable;
-//                  Log.i(TAG, "Set maccawAnimation = renderable;");
-//              })
-//              .exceptionally(
-//                      throwable -> {
-//                        Log.e(TAG, "Unable to load Renderable.", throwable);
-//                        return null;
-//                      });
     }
 
     if (ratGenome == null) {
