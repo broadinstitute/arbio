@@ -131,41 +131,42 @@ public class AugmentedImageNode extends AnchorNode {
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
+    if (assets == null) {
+      // TODO: Refactor to not fetch in main thread.
+      if (android.os.Build.VERSION.SDK_INT > 9) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+      }
 
-    // TODO: Refactor to not fetch in main thread.
-    if (android.os.Build.VERSION.SDK_INT > 9) {
-      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-      StrictMode.setThreadPolicy(policy);
-    }
+      setAssets();
 
-    setAssets();
+      for (Map.Entry<String, Object> entry : assets.entrySet()) {
 
-    for(Map.Entry<String, Object> entry : assets.entrySet()){
+        Log.i(TAG, "entry:");
+        Log.i(TAG, entry.toString());
 
-      Log.i(TAG, "entry:");
-      Log.i(TAG, entry.toString());
+        Map<String, Object> asset = (Map<String, Object>) entry.getValue();
 
-      Map<String, Object> asset = (Map<String, Object>) entry.getValue();
+        Log.i(TAG, "asset:");
+        Log.i(TAG, asset.toString());
 
-      Log.i(TAG, "asset:");
-      Log.i(TAG, asset.toString());
+        Uri uri = Uri.parse(asset.get("url").toString());
+        ArrayList position = (ArrayList) asset.get("position");
 
-      Uri uri = Uri.parse(asset.get("url").toString());
-      ArrayList position = (ArrayList) asset.get("position");
+        CompletableFuture<ModelRenderable> model = ModelRenderable.builder()
+                .setSource(context, RenderableSource.builder().setSource(
+                        context,
+                        uri,
+                        RenderableSource.SourceType.GLTF2).build())
+                .setRegistryId(uri)
+                .build();
 
-      CompletableFuture<ModelRenderable> model = ModelRenderable.builder()
-              .setSource(context, RenderableSource.builder().setSource(
-                      context,
-                      uri,
-                      RenderableSource.SourceType.GLTF2).build())
-              .setRegistryId(uri)
-              .build();
+        asset.put("url", uri);
+        asset.put("position", position);
+        asset.put("model", model);
 
-      asset.put("url", uri);
-      asset.put("position", position);
-      asset.put("model", model);
-
-      assets.put(entry.getKey(), asset);
+        assets.put(entry.getKey(), asset);
+      }
     }
 
     if (cesiumMan == null) {
