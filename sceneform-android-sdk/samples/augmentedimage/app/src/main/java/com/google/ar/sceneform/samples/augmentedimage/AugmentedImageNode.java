@@ -142,6 +142,8 @@ public class AugmentedImageNode extends AnchorNode {
 
       for (Map.Entry<String, Object> entry : assets.entrySet()) {
 
+        CompletableFuture<ModelRenderable> model;
+
         Log.i(TAG, "entry:");
         Log.i(TAG, entry.toString());
 
@@ -150,16 +152,29 @@ public class AugmentedImageNode extends AnchorNode {
         Log.i(TAG, "asset:");
         Log.i(TAG, asset.toString());
 
-        Uri uri = Uri.parse(asset.get("url").toString());
+        String urlString = asset.get("url").toString();
+
+        Uri uri = Uri.parse(urlString);
         ArrayList position = (ArrayList) asset.get("position");
 
-        CompletableFuture<ModelRenderable> model = ModelRenderable.builder()
-                .setSource(context, RenderableSource.builder().setSource(
-                        context,
-                        uri,
-                        RenderableSource.SourceType.GLTF2).build())
-                .setRegistryId(uri)
-                .build();
+        // Potential "sfb" file extension
+        String endSlice = urlString.substring(urlString.length() - 3, urlString.length());
+        Boolean isSfbFile = (endSlice.equals("sfb"));
+
+        if (isSfbFile) {
+          model = ModelRenderable.builder()
+                  .setSource(context, uri)
+                  .setRegistryId(uri)
+                  .build();
+        } else {
+          model = ModelRenderable.builder()
+                  .setSource(context, RenderableSource.builder().setSource(
+                          context,
+                          uri,
+                          RenderableSource.SourceType.GLTF2).build())
+                  .setRegistryId(uri)
+                  .build();
+        }
 
         asset.put("url", uri);
         asset.put("position", position);
