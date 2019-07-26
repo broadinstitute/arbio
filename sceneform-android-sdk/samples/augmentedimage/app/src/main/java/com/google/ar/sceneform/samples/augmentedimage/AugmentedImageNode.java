@@ -128,6 +128,16 @@ public class AugmentedImageNode extends AnchorNode {
 
   }
 
+  /**
+   * Determines if a URL ends in "sfb", i.e. if it's for a Sceneform binary file
+   * Used as a crude check for animation support.
+   */
+  private static Boolean isSfbFile(String url) {
+    int urlLength = url.length();
+    String endSlice = url.substring(urlLength - 3, urlLength);
+    return endSlice.equals("sfb");
+  }
+
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
@@ -157,11 +167,7 @@ public class AugmentedImageNode extends AnchorNode {
         Uri uri = Uri.parse(urlString);
         ArrayList position = (ArrayList) asset.get("position");
 
-        // Potential "sfb" file extension
-        String endSlice = urlString.substring(urlString.length() - 3, urlString.length());
-        Boolean isSfbFile = (endSlice.equals("sfb"));
-
-        if (isSfbFile) {
+        if (isSfbFile(urlString)) {
           model = ModelRenderable.builder()
                   .setSource(context, uri)
                   .setRegistryId(uri)
@@ -232,6 +238,7 @@ public class AugmentedImageNode extends AnchorNode {
                           Log.e(TAG, "Exception loading", throwable);
                           return null;
                         });
+        break;
       }
 
       // Set the anchor based on the center of the image.
@@ -252,22 +259,22 @@ public class AugmentedImageNode extends AnchorNode {
       node.setParent(this);
       node.setLocalPosition(localPosition);
       node.setRenderable(model.getNow(null));
-    }
-//
-//    // "Stories retold" inset
-//    localPosition.set(-11f, 0f, 6.5f); // Tuned for west stand
-//    node = new Node();
-//    node.setParent(this);
-//    node.setLocalPosition(localPosition);
-//    node.setRenderable(brain.getNow(null));
-//
-//    // Hybridization oven
-//    localPosition.set(-11.5f, 0f, -5f); // Tuned for west stand
-//    node = new Node();
-//    node.setParent(this);
-//    node.setLocalPosition(localPosition);
-//    node.setRenderable(maccawAnimation.getNow(null));
 
+
+      if (isSfbFile(asset.get("url").toString())) {
+
+        ModelRenderable animation = model.getNow(null);
+
+        if ((animator == null || !animator.isRunning()) && startedAnimator == false) {
+          startedAnimator = true;
+          Log.i(TAG, "animator == null");
+          AnimationData data = animation.getAnimationData(nextAnimation);
+          nextAnimation = (nextAnimation + 1) % animation.getAnimationDataCount();
+          animator = new ModelAnimator(data, animation);
+          animator.start();
+        }
+      }
+    }
   }
 
   @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -407,13 +414,6 @@ public class AugmentedImageNode extends AnchorNode {
       nextAnimation = (nextAnimation + 1) % maccaw.getAnimationDataCount();
       animator = new ModelAnimator(data, maccaw);
       animator.start();
-//      Toast toast = Toast.makeText(this, data.getName(), Toast.LENGTH_SHORT);
-//      Log.d(
-//              TAG,
-//              String.format(
-//                      "Starting animation %s - %d ms long", data.getName(), data.getDurationMs()));
-//      toast.setGravity(Gravity.CENTER, 0, 0);
-//      toast.show();
     }
   }
 
