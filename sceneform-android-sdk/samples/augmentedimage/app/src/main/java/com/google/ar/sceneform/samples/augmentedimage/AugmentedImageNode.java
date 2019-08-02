@@ -154,9 +154,9 @@ public class AugmentedImageNode extends AnchorNode {
 
       setAssets();
 
-      for (Map.Entry<String, Object> entry : assets.entrySet()) {
+      Map<String, Object> modelAssets = new HashMap();
 
-        CompletableFuture<ModelRenderable> model;
+      for (Map.Entry<String, Object> entry : assets.entrySet()) {
 
         Log.i(TAG, "entry:");
         Log.i(TAG, entry.toString());
@@ -166,31 +166,39 @@ public class AugmentedImageNode extends AnchorNode {
         Log.i(TAG, "asset:");
         Log.i(TAG, asset.toString());
 
-        String urlString = asset.get("url").toString();
+        for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
+          Map<String, Object> modelAsset = (Map<String, Object>) modelEntry.getValue();
 
-        Uri uri = Uri.parse(urlString);
-        ArrayList position = (ArrayList) asset.get("position");
+          CompletableFuture<ModelRenderable> model;
 
-        if (isSfbFile(urlString)) {
-          model = ModelRenderable.builder()
-                  .setSource(context, uri)
-                  .setRegistryId(uri)
-                  .build();
-        } else {
-          model = ModelRenderable.builder()
-                  .setSource(context, RenderableSource.builder().setSource(
-                          context,
-                          uri,
-                          RenderableSource.SourceType.GLTF2).build())
-                  .setRegistryId(uri)
-                  .build();
+          String urlString = modelAsset.get("url").toString();
+
+          Uri uri = Uri.parse(urlString);
+          ArrayList position = (ArrayList) modelAsset.get("position");
+
+          if (isSfbFile(urlString)) {
+            model = ModelRenderable.builder()
+                    .setSource(context, uri)
+                    .setRegistryId(uri)
+                    .build();
+          } else {
+            model = ModelRenderable.builder()
+                    .setSource(context, RenderableSource.builder().setSource(
+                            context,
+                            uri,
+                            RenderableSource.SourceType.GLTF2).build())
+                    .setRegistryId(uri)
+                    .build();
+          }
+
+          modelAsset.put("url", uri);
+          modelAsset.put("position", position);
+          modelAsset.put("model", model);
+
+          modelAssets.put(modelEntry.getKey(), modelAsset);
         }
 
-        asset.put("url", uri);
-        asset.put("position", position);
-        asset.put("model", model);
-
-        assets.put(entry.getKey(), asset);
+        assets.put(entry.getKey(), modelAssets);
       }
     }
 
@@ -228,8 +236,13 @@ public class AugmentedImageNode extends AnchorNode {
   public void setBroadLobbyImages(AugmentedImage image) {
     this.image = image;
 
-    for(Map.Entry<String, Object> entry : assets.entrySet()) {
-      Map<String, Object> asset = (Map<String, Object>) assets.get(entry.getKey());
+    String imageName = image.getName();
+
+    Map<String, Object> imageAssets = (Map<String, Object>) assets.get(imageName);
+
+    for(Map.Entry<String, Object> entry : imageAssets.entrySet()) {
+
+      Map<String, Object> asset = (Map<String, Object>) imageAssets.get(entry.getKey());
 
       CompletableFuture<ModelRenderable> model = (CompletableFuture<ModelRenderable>) asset.get("model");
 
