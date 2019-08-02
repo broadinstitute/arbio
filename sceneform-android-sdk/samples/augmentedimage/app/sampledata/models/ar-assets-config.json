@@ -7,6 +7,10 @@
     "brain": {
       "url": "https://storage.googleapis.com/arbio/brain_areas/scene.gltf",
       "position": [-11.0, 0.0, 6.5]
+    },
+    "demo_animation": {
+      "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
+      "position": [-5.0, 0.0, 0.0]
     }
   }
 }
