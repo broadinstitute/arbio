@@ -87,28 +87,26 @@ public class AugmentedImageActivity extends AppCompatActivity {
           String text = "Detected Image " + augmentedImage.getIndex();
           SnackbarHelper.getInstance().showMessage(this, text);
           break;
-
         case TRACKING:
           // Have to switch to UI Thread to update View.
           fitToScanView.setVisibility(View.GONE);
-
+          String name = augmentedImage.getName();
           // Create a new anchor for newly found images.
-          if (augmentedImage.getName().equals("B lymphocyte") ||
-                  augmentedImage.getName().equals("Stories retold inset")) {
+          if (name.equals("B lymphocyte") || name.equals("Stories retold inset")) {
             AugmentedImageNode node = new AugmentedImageNode(this);
 //            node.setProteinImage(augmentedImage);
             node.setBroadLobbyImages(augmentedImage);
             augmentedImageMap.put(augmentedImage, node);
             arFragment.getArSceneView().getScene().addChild(node);
-          } else if (augmentedImage.getName().equals("Myosin close")) {
+          } else if (name.equals("Myosin close")) {
             AugmentedImageNode node = new AugmentedImageNode(this);
             node.setBrainImage(augmentedImage);
             augmentedImageMap.put(augmentedImage, node);
             arFragment.getArSceneView().getScene().addChild(node);
-          } else if (augmentedImage.getName().equals("Mobile lab rat") ||
-              augmentedImage.getName().equals("Mobile panel interior") ||
-              augmentedImage.getName().equals("Stairs sign") ||
-              augmentedImage.getName().equals("Gene chip washer")) {
+          } else if (name.equals("Mobile lab rat") ||
+              name.equals("Mobile panel interior") ||
+              name.equals("Stairs sign") ||
+              name.equals("Gene chip washer")) {
 
             AugmentedImageNode node = new AugmentedImageNode(this);
             node.setRatGenomeImage(augmentedImage);
@@ -117,7 +115,7 @@ public class AugmentedImageActivity extends AppCompatActivity {
 
 ////            ratGenomeView.setVisibility(View.VISIBLE);
 
-          } else if (augmentedImage.getName().equals("Stories retold floor")) {
+          } else if (name.equals("Stories retold floor")) {
 
             AugmentedImageNode node = new AugmentedImageNode(this);
 //            node.setCesiumManImage(augmentedImage);

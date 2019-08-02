@@ -144,6 +144,7 @@ public class AugmentedImageNode extends AnchorNode {
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
+    // TODO: Refactor to do initial fetch on app start, not image recognition
     if (assets == null) {
       // TODO: Refactor to not fetch in main thread.
       if (android.os.Build.VERSION.SDK_INT > 9) {
