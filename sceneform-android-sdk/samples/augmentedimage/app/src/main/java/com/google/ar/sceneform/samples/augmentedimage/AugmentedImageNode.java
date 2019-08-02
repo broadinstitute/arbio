@@ -154,9 +154,9 @@ public class AugmentedImageNode extends AnchorNode {
 
       setAssets();
 
-      Map<String, Object> modelAssets = new HashMap();
-
       for (Map.Entry<String, Object> entry : assets.entrySet()) {
+
+        Map<String, Object> modelAssets = new HashMap();
 
         Log.i(TAG, "entry:");
         Log.i(TAG, entry.toString());
@@ -202,31 +202,6 @@ public class AugmentedImageNode extends AnchorNode {
       }
     }
 
-    if (cesiumMan == null) {
-      cesiumMan =
-              ModelRenderable.builder()
-                      .setSource(context, Uri.parse("CesiumMan.sfb"))
-                      .build();
-    }
-
-    if (maccawAnimation == null) {
-
-        Log.i(TAG, "Building maccawAnimation");
-
-        maccawAnimation =
-                ModelRenderable.builder()
-//                        .setSource(context, Uri.parse("5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfb"))
-                        .setSource(context, Uri.parse("andy_dance.sfb"))
-                        .build();
-
-    }
-
-    if (ratGenome == null) {
-      ratGenome =
-              ViewRenderable.builder()
-                      .setView(nodeContext, R.layout.rat_genome)
-                      .build();
-    }
   }
 
   /**
