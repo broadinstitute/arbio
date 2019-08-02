@@ -79,6 +79,9 @@ public class AugmentedImageNode extends AnchorNode {
   private static final String GLTF_ASSET =
           "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf";
 
+  private static final String AR_ASSETS_CONFIG_URL =
+          "https://storage.googleapis.com/arbio/ar-assets-config.json";
+
   // Controls animation playback.
   private static ModelAnimator animator;
 
@@ -110,7 +113,7 @@ public class AugmentedImageNode extends AnchorNode {
   private static void setAssets() {
     String content = "";
     try {
-      content = readUrl("https://storage.googleapis.com/arbio/ar-assets-config.json");
+      content = readUrl(AR_ASSETS_CONFIG_URL);
       Log.i(TAG, "Fetched AR assets configuration");
     } catch (Exception e) {
       Log.e(TAG, "Cannot fetch AR assets configuration", e);
