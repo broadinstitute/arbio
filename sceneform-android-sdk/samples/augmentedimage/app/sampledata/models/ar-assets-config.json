@@ -2,15 +2,15 @@
   "assets": {
     "b_lymphocyte": {
       "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
-      "position": [-22.0, 3.0, 5.0]
+      "position": [-2.0, 1.0, 2.0]
     },
     "brain": {
       "url": "https://storage.googleapis.com/arbio/brain_areas/scene.gltf",
-      "position": [-11.0, 0.0, 6.5]
+      "position": [-1.0, 0.0, -3.5]
     },
     "demo_animation": {
       "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
-      "position": [-5.0, 0.0, 0.0]
+      "position": [3.0, 0.0, 0.0]
     }
   }
 }
