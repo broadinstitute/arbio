@@ -1,30 +1,32 @@
 {
   "assets": {
 
-    "B lymphocyte": {
+    "Stories retold inset": {
+      "animation_demo": {
+        "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
+        "position": [0.0, 0.0, 0.0]
+      },
       "b_lymphocyte": {
         "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
         "position": [-2.0, 1.0, 2.0]
-      },
-      "brain": {
-        "url": "https://storage.googleapis.com/arbio/brain_areas/scene.gltf",
-        "position": [-1.0, 0.0, -3.5]
-      },
-      "demo_animation": {
-        "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
-        "position": [3.0, 0.0, 0.0]
       }
     },
 
-
-    "Stories retold inset": {
+    "B lymphocyte": {
       "b_lymphocyte": {
         "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
-        "position": [2.0, 3.0, 2.0]
+        "position": [0.0, 0.0, 0.0]
+      }
+    },
+
+    "Broad logo": {
+      "scarlet_maccaw": {
+        "url": "scarlet_maccaw_witmer_lab/5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfb",
+        "position": [-5.0, 1.0, 2.0]
       },
-      "demo_animation": {
-        "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
-        "position": [3.0, 4.0, 3.0]
+      "cesium_man": {
+        "url": "https://storage.googleapis.com/arbio/CesiumMan.sfb",
+        "position": [1.0, 0.0, 3.0]
       }
     }
   }
