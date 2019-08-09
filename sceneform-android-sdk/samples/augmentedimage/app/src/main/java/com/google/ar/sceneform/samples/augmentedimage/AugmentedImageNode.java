@@ -110,7 +110,7 @@ public class AugmentedImageNode extends AnchorNode {
     }
   }
 
-  private static void setAssets() {
+  private static void fetchAssets() {
     String content = "";
     try {
       content = readUrl(AR_ASSETS_CONFIG_URL);
@@ -131,6 +131,71 @@ public class AugmentedImageNode extends AnchorNode {
 
   }
 
+    /**
+     * Retrieves and sets 3D model assets from GCS bucket
+     *
+     * TODO:
+     * Refactor to do initial fetch on app start, not image recognition
+     */
+    private static void setAssets(Context context) {
+
+
+        // TODO: Refactor to not fetch in main thread.
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+        fetchAssets();
+
+        for (Map.Entry<String, Object> entry : assets.entrySet()) {
+
+            Map<String, Object> modelAssets = new HashMap();
+
+            Log.i(TAG, "entry:");
+            Log.i(TAG, entry.toString());
+
+            Map<String, Object> asset = (Map<String, Object>) entry.getValue();
+
+            Log.i(TAG, "asset:");
+            Log.i(TAG, asset.toString());
+
+            for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
+                Map<String, Object> modelAsset = (Map<String, Object>) modelEntry.getValue();
+
+                CompletableFuture<ModelRenderable> model;
+
+                String urlString = modelAsset.get("url").toString();
+
+                Uri uri = Uri.parse(urlString);
+                ArrayList position = (ArrayList) modelAsset.get("position");
+
+                if (isSfbFile(urlString)) {
+                    model = ModelRenderable.builder()
+                            .setSource(context, uri)
+                            .setRegistryId(uri)
+                            .build();
+                } else {
+                    model = ModelRenderable.builder()
+                            .setSource(context, RenderableSource.builder().setSource(
+                                    context,
+                                    uri,
+                                    RenderableSource.SourceType.GLTF2).build())
+                            .setRegistryId(uri)
+                            .build();
+                }
+
+                modelAsset.put("url", uri);
+                modelAsset.put("position", position);
+                modelAsset.put("model", model);
+
+                modelAssets.put(modelEntry.getKey(), modelAsset);
+            }
+
+            assets.put(entry.getKey(), modelAssets);
+        }
+    }
+
   /**
    * Determines if a URL ends in "sfb", i.e. if it's for a Sceneform binary file
    * Used as a crude check for animation support.
@@ -144,62 +209,8 @@ public class AugmentedImageNode extends AnchorNode {
   public AugmentedImageNode(Context context) {
     this.nodeContext = context;
 
-    // TODO: Refactor to do initial fetch on app start, not image recognition
     if (assets == null) {
-      // TODO: Refactor to not fetch in main thread.
-      if (android.os.Build.VERSION.SDK_INT > 9) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-      }
-
-      setAssets();
-
-      for (Map.Entry<String, Object> entry : assets.entrySet()) {
-
-        Map<String, Object> modelAssets = new HashMap();
-
-        Log.i(TAG, "entry:");
-        Log.i(TAG, entry.toString());
-
-        Map<String, Object> asset = (Map<String, Object>) entry.getValue();
-
-        Log.i(TAG, "asset:");
-        Log.i(TAG, asset.toString());
-
-        for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
-          Map<String, Object> modelAsset = (Map<String, Object>) modelEntry.getValue();
-
-          CompletableFuture<ModelRenderable> model;
-
-          String urlString = modelAsset.get("url").toString();
-
-          Uri uri = Uri.parse(urlString);
-          ArrayList position = (ArrayList) modelAsset.get("position");
-
-          if (isSfbFile(urlString)) {
-            model = ModelRenderable.builder()
-                    .setSource(context, uri)
-                    .setRegistryId(uri)
-                    .build();
-          } else {
-            model = ModelRenderable.builder()
-                    .setSource(context, RenderableSource.builder().setSource(
-                            context,
-                            uri,
-                            RenderableSource.SourceType.GLTF2).build())
-                    .setRegistryId(uri)
-                    .build();
-          }
-
-          modelAsset.put("url", uri);
-          modelAsset.put("position", position);
-          modelAsset.put("model", model);
-
-          modelAssets.put(modelEntry.getKey(), modelAsset);
-        }
-
-        assets.put(entry.getKey(), modelAssets);
-      }
+      setAssets(context);
     }
 
   }
