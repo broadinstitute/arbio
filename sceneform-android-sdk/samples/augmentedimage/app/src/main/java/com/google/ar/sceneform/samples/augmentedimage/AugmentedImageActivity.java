@@ -18,6 +18,7 @@ package com.google.ar.sceneform.samples.augmentedimage;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.google.ar.core.AugmentedImage;
@@ -39,6 +40,8 @@ public class AugmentedImageActivity extends AppCompatActivity {
   private ArFragment arFragment;
   private ImageView fitToScanView;
   private ImageView ratGenomeView;
+
+  private static final String TAG = "AugmentedImageActivity";
 
   // Augmented image and its associated center pose anchor, keyed by the augmented image in
   // the database.
@@ -95,6 +98,8 @@ public class AugmentedImageActivity extends AppCompatActivity {
           if (name.equals("B lymphocyte") || name.equals("Stories retold inset")) {
             AugmentedImageNode node = new AugmentedImageNode(this);
 //            node.setProteinImage(augmentedImage);
+//            Log.i(TAG, "Detected image named:");
+//            Log.i(TAG, name);
             node.setBroadLobbyImages(augmentedImage);
             augmentedImageMap.put(augmentedImage, node);
             arFragment.getArSceneView().getScene().addChild(node);

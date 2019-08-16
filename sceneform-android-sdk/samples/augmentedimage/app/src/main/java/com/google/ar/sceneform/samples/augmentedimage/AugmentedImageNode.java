@@ -212,7 +212,6 @@ public class AugmentedImageNode extends AnchorNode {
     if (assets == null) {
       setAssets(context);
     }
-
   }
 
   /**
