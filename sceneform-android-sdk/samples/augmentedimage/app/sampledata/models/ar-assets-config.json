@@ -1,14 +1,9 @@
 {
   "assets": {
-
-    "Stories retold inset": {
+    "Broad logo": {
       "animation_demo": {
         "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
         "position": [0.0, 0.0, 0.0]
-      },
-      "b_lymphocyte": {
-        "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
-        "position": [-2.0, 1.0, 2.0]
       }
     },
 
@@ -19,7 +14,32 @@
       }
     },
 
-    "Broad logo": {
+    "Dendritic cell": {
+      "b_lymphocyte": {
+        "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
+        "position": [0.0, 0.0, 0.0]
+      }
+    },
+
+    "Stories retold inset": {
+      "animation_demo": {
+        "url": "https://storage.googleapis.com/arbio/andy_dance.sfb",
+        "position": [0.0, 0.0, 0.0]
+      }
+    },
+
+    "Placeholder": {
+      "b_lymphocyte": {
+        "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
+        "position": [1.0, 2.0, 3.0]
+      }
+    },
+
+    "unused": {
+      "b_lymphocyte": {
+        "url": "https://storage.googleapis.com/arbio/1408%20White%20Blood%20Cell.gltf",
+        "position": [0.0, 0.0, 0.0]
+      },
       "scarlet_maccaw": {
         "url": "scarlet_maccaw_witmer_lab/5ebaec95694b4b9faecacecf06d7b5f4.fbx.sfb",
         "position": [-5.0, 1.0, 2.0]
