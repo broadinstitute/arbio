@@ -129,10 +129,11 @@ public class AugmentedImageActivity extends AppCompatActivity {
             arFragment.getArSceneView().getScene().addChild(node);
 
           } else if (!augmentedImageMap.containsKey(augmentedImage)){
-//            AugmentedImageNode node = new AugmentedImageNode(this);
+            AugmentedImageNode node = new AugmentedImageNode(this);
 //            node.setImage(augmentedImage);
-//            augmentedImageMap.put(augmentedImage, node);
-//            arFragment.getArSceneView().getScene().addChild(node);
+            node.setBroadLobbyImages(augmentedImage);
+            augmentedImageMap.put(augmentedImage, node);
+            arFragment.getArSceneView().getScene().addChild(node);
           }
           break;
 
