@@ -139,12 +139,9 @@ public class AugmentedImageNode extends AnchorNode {
      */
     private static void setAssets(Context context) {
 
-
         // TODO: Refactor to not fetch in main thread.
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         fetchAssets();
 
