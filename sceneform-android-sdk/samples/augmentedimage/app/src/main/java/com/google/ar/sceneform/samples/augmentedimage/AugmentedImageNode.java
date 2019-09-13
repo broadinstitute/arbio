@@ -27,6 +27,7 @@ import com.google.ar.core.AugmentedImage;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -46,6 +47,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -157,6 +159,8 @@ public class AugmentedImageNode extends AnchorNode {
             Log.i(TAG, "asset:");
             Log.i(TAG, asset.toString());
 
+            ArrayList rotation;
+
             for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
                 Map<String, Object> modelAsset = (Map<String, Object>) modelEntry.getValue();
 
@@ -166,6 +170,12 @@ public class AugmentedImageNode extends AnchorNode {
 
                 Uri uri = Uri.parse(urlString);
                 ArrayList position = (ArrayList) modelAsset.get("position");
+
+                if (modelAsset.containsKey("rotation")) {
+                  rotation = (ArrayList) modelAsset.get("rotation");
+                } else {
+                  rotation = new ArrayList<>(Arrays.asList(0f, 0f, 0f, 0f));
+                }
 
                 if (isSfbFile(urlString)) {
                     model = ModelRenderable.builder()
@@ -184,6 +194,7 @@ public class AugmentedImageNode extends AnchorNode {
 
                 modelAsset.put("url", uri);
                 modelAsset.put("position", position);
+                modelAsset.put("rotation", rotation);
                 modelAsset.put("model", model);
 
                 modelAssets.put(modelEntry.getKey(), modelAsset);
@@ -251,12 +262,19 @@ public class AugmentedImageNode extends AnchorNode {
       Float y = ((Double) position.get(1)).floatValue();
       Float z = ((Double) position.get(2)).floatValue();
 
+      ArrayList rotation = (ArrayList) asset.get("rotation");
+      Float rX = ((Double) rotation.get(0)).floatValue();
+      Float rY = ((Double) rotation.get(1)).floatValue();
+      Float rZ = ((Double) rotation.get(2)).floatValue();
+      Float rW = ((Double) rotation.get(3)).floatValue();
+
 
       // Top of mezzanine stairs
       localPosition.set(x, y, z); // Tuned for west stand
       node = new Node();
       node.setParent(this);
       node.setLocalPosition(localPosition);
+      node.setLocalRotation(Quaternion.axisAngle(new Vector3(rX, rY, rZ), rW));
       node.setRenderable(model.getNow(null));
 
 
