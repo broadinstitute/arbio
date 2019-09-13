@@ -159,6 +159,7 @@ public class AugmentedImageNode extends AnchorNode {
             Log.i(TAG, "asset:");
             Log.i(TAG, asset.toString());
 
+            ArrayList position;
             ArrayList rotation;
 
             for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
@@ -169,12 +170,17 @@ public class AugmentedImageNode extends AnchorNode {
                 String urlString = modelAsset.get("url").toString();
 
                 Uri uri = Uri.parse(urlString);
-                ArrayList position = (ArrayList) modelAsset.get("position");
+
+                if (modelAsset.containsKey("position")) {
+                  position = (ArrayList) modelAsset.get("position");
+                } else {
+                  position = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0));
+                }
 
                 if (modelAsset.containsKey("rotation")) {
                   rotation = (ArrayList) modelAsset.get("rotation");
                 } else {
-                  rotation = new ArrayList<>(Arrays.asList(0f, 0f, 0f, 0f));
+                  rotation = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0, 0.0));
                 }
 
                 if (isSfbFile(urlString)) {
@@ -269,8 +275,13 @@ public class AugmentedImageNode extends AnchorNode {
       Float rW = ((Double) rotation.get(3)).floatValue();
 
 
-      // Top of mezzanine stairs
-      localPosition.set(x, y, z); // Tuned for west stand
+      Log.i(TAG, "position, x");
+      Log.i(TAG, x.toString());
+
+        Log.i(TAG, "rotation, rX");
+        Log.i(TAG, rX.toString());
+
+      localPosition.set(x, y, z);
       node = new Node();
       node.setParent(this);
       node.setLocalPosition(localPosition);
