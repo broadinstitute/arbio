@@ -160,6 +160,7 @@ public class AugmentedImageNode extends AnchorNode {
             Log.i(TAG, asset.toString());
 
             ArrayList position;
+            Double scale;
             ArrayList rotation;
 
             for (Map.Entry<String, Object> modelEntry : asset.entrySet()) {
@@ -170,6 +171,12 @@ public class AugmentedImageNode extends AnchorNode {
                 String urlString = modelAsset.get("url").toString();
 
                 Uri uri = Uri.parse(urlString);
+
+                if (modelAsset.containsKey("scale")) {
+                    scale = (Double) modelAsset.get("scale");
+                } else {
+                    scale = 1.0;
+                }
 
                 if (modelAsset.containsKey("position")) {
                   position = (ArrayList) modelAsset.get("position");
@@ -200,6 +207,7 @@ public class AugmentedImageNode extends AnchorNode {
 
                 modelAsset.put("url", uri);
                 modelAsset.put("position", position);
+                modelAsset.put("scale", scale);
                 modelAsset.put("rotation", rotation);
                 modelAsset.put("model", model);
 
@@ -274,17 +282,13 @@ public class AugmentedImageNode extends AnchorNode {
       Float rZ = ((Double) rotation.get(2)).floatValue();
       Float rW = ((Double) rotation.get(3)).floatValue();
 
-
-      Log.i(TAG, "position, x");
-      Log.i(TAG, x.toString());
-
-        Log.i(TAG, "rotation, rX");
-        Log.i(TAG, rX.toString());
+      Float scale = ((Double) asset.get("scale")).floatValue();
 
       localPosition.set(x, y, z);
       node = new Node();
       node.setParent(this);
       node.setLocalPosition(localPosition);
+      node.setLocalScale(new Vector3(scale, scale, scale));
       node.setLocalRotation(Quaternion.axisAngle(new Vector3(rX, rY, rZ), rW));
       node.setRenderable(model.getNow(null));
 
